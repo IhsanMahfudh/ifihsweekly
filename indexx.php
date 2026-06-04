@@ -34,10 +34,10 @@ if (localStorage.getItem('darkMode') === 'enabled') {
         
         <nav class="navbar">
             <ul>
-                <li><a href="indexx.html">Home</a></li>
-                <li><a href="Profil.html">Profil</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="Mahasiswa.html">Data Mahasiswa</a></li>
+                <li><a href="indexx.php">Home</a></li>
+                <li><a href="Profil.php">Profil</a></li>
+                <li><a href="contact.php">Contact</a></li>
+                <li><a href="Mahasiswa.php">Data Mahasiswa</a></li>
             </ul>
         </nav>
         

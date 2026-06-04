@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact | Informatika</title>
+    <title>Data Mahasiswa | INFORMATIKA</title>
     <link rel="stylesheet" href="Aset/CSS/style.css">
 </head>
 <!-- Dark Mode Toggle -->
@@ -25,6 +25,120 @@ if (localStorage.getItem('darkMode') === 'enabled') {
     document.body.classList.add('dark');
 }
 </script>
+<script>
+// Data Mahasiswa (disimpan di localStorage)
+let mahasiswa = JSON.parse(localStorage.getItem('mahasiswa')) || [
+    {
+        id: 1,
+        nama: "Ihsan Mahfudh",
+        nim: "230101001",
+        uts: 80,
+        uas: 85,
+        tugas: 90,
+        foto: "Aset/Image/Ihsan Mahfudh.jpg"
+    },
+    {
+        id: 2,
+        nama: "Khabib Nurmagomedov",
+        nim: "230101002",
+        uts: 85,
+        uas: 90,
+        tugas: 88,
+        foto: "Aset/Image/Khabib Nurmagomedov.jpg"
+    }
+];
+
+let editId = null;
+
+function renderTable() {
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+
+    mahasiswa.forEach((mhs, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${mhs.nama}</td>
+            <td><img src="${mhs.foto}" alt="${mhs.nama}" width="50" onerror="this.src='https://via.placeholder.com/50'"></td>
+            <td>${mhs.uts}</td>
+            <td>${mhs.uas}</td>
+            <td>${mhs.tugas}</td>
+            <td>
+                <button onclick="editData(${mhs.id})" class="button" style="background:#eab308; padding:6px 12px; font-size:0.9rem;">Edit</button>
+                <button onclick="hapusData(${mhs.id})" class="button" style="background:#ef4444; padding:6px 12px; font-size:0.9rem;">Hapus</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function handleTambah(e) {
+    e.preventDefault();
+    const fileInput = document.getElementById('foto');
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            tambahDataKeArray(event.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function tambahDataKeArray(fotoBase64) {
+    const newData = {
+        id: Date.now(),
+        nama: document.getElementById('nama').value,
+        nim: document.getElementById('nim').value,
+        uts: parseInt(document.getElementById('uts').value),
+        uas: parseInt(document.getElementById('uas').value),
+        tugas: parseInt(document.getElementById('tugas').value),
+        foto: fotoBase64
+    };
+
+    mahasiswa.push(newData);
+    localStorage.setItem('mahasiswa', JSON.stringify(mahasiswa));
+    alert("Data berhasil ditambahkan!");
+    window.location.href = "Mahasiswa.php";
+}
+
+function editData(id) {
+    const mhs = mahasiswa.find(m => m.id === id);
+    if (!mhs) return;
+
+    editId = id;
+    const namaBaru = prompt("Nama baru:", mhs.nama);
+    const utsBaru = parseInt(prompt("Nilai UTS baru:", mhs.uts));
+    const uasBaru = parseInt(prompt("Nilai UAS baru:", mhs.uas));
+    const tugasBaru = parseInt(prompt("Nilai Tugas baru:", mhs.tugas));
+
+    if (namaBaru && !isNaN(utsBaru) && !isNaN(uasBaru) && !isNaN(tugasBaru)) {
+        mhs.nama = namaBaru;
+        mhs.uts = utsBaru;
+        mhs.uas = uasBaru;
+        mhs.tugas = tugasBaru;
+        localStorage.setItem('mahasiswa', JSON.stringify(mahasiswa));
+        renderTable();
+        alert("Data berhasil diupdate!");
+    }
+}
+
+function hapusData(id) {
+    if (confirm("Yakin ingin menghapus data ini?")) {
+        mahasiswa = mahasiswa.filter(m => m.id !== id);
+        localStorage.setItem('mahasiswa', JSON.stringify(mahasiswa));
+        renderTable();
+    }
+}
+
+function tambahDataBaru() {
+    window.location.href = "tambahdata.php";
+}
+
+// Load tabel saat halaman dibuka
+document.addEventListener('DOMContentLoaded', renderTable);
+</script>
 <body>
     <div class="container">
         <div class="header">
@@ -34,19 +148,101 @@ if (localStorage.getItem('darkMode') === 'enabled') {
         
         <nav class="navbar">
             <ul>
-                <li><a href="indexx.html">Home</a></li>
-                <li><a href="Profil.html">Profil</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="Mahasiswa.html">Data Mahasiswa</a></li>
+                <li><a href="indexx.php">Home</a></li>
+                <li><a href="Profil.php">Profil</a></li>
+                <li><a href="contact.php">Contact</a></li>
+                <li><a href="Mahasiswa.php">Data Mahasiswa</a></li>
             </ul>
         </nav>
         
         <div class="content">
-            <h2>Contact Information</h2>
-            <p style="font-size: 1.2em; margin-bottom: 30px;">Hubungi kami untuk informasi lebih lanjut tentang program Informatika.</p>
-            <a href="mailto:informatika@unimus.ac.id" class="button">Kirim Email</a>
-            <a href="tel:+62241234567" class="button">Telpon</a>
+            <h2>Data Mahasiswa</h2>
+            <a href="tambahdata.php" class="button">Tambah Data</a>
+
+            <table class="data-table">
+                <tr>
+                    <th rowspan="2">No</th>
+                    <th rowspan="2">Nama</th>
+                    <th rowspan="2">Foto</th>
+                    <th colspan="3">Nilai</th>
+                </tr>
+                <tr>
+                    <th>UTS</th>
+                    <th>UAS</th>
+                    <th>Tugas</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Ihsan Mahfudh</td>
+                    <td>
+                        <img src="Aset/Image/Ihsan Mahfudh.jpg" alt="Foto Ihsan Mahfudh" width="50">
+                    </td>
+                    <td>80</td>
+                    <td>85</td>
+                    <td>90</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Khabib Nurmagomedov</td>
+                    <td>
+                        <img src="Aset/Image/Khabib Nurmagomedov.jpg" alt="Foto Khabib Nurmagomedov" width="50">
+                    </td>
+                    <td>80</td>
+                    <td>85</td>
+                    <td>90</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Mario Caesar</td>
+                    <td>
+                        <img src="Aset/Image/Mario Caesar.jpg" alt="Foto Mario Caesar" width="50">
+                    </td>
+                    <td>80</td>
+                    <td>85</td>
+                    <td>90</td>
+                </tr>
+            </table>
+
+            <br>
+            <table class="data-table">
+                <tr>
+                    <td>1,1</td>
+                    <td>1,2</td>
+                    <td>1,3</td>
+                    <td>1,4</td>
+                </tr>
+                <tr>
+                    <td>2,1</td>
+                    <td colspan="2" rowspan="2">?</td>
+                    <td>2,4</td>
+                </tr>
+                <tr>
+                    <td>3,1</td>
+                    <td>3,4</td>
+                </tr>
+                <tr>
+                    <td>4,1</td>
+                    <td>4,2</td>
+                    <td>4,3</td>
+                    <td>4,4</td>
+                </tr>
+            </table>
         </div>
-    </div>
+    </div><table class="data-table" id="tabelMahasiswa">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Foto</th>
+                <th>UTS</th>
+                <th>UAS</th>
+                <th>Tugas</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            <!-- Data akan di-load oleh JavaScript -->
+        </tbody>
+    </table>
 </body>
 </html>
