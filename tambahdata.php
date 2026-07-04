@@ -1,34 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Data | Informatika</title>
-    <link rel="stylesheet" href="Aset/CSS/style.css">
-</head>
-<!-- Dark Mode Toggle -->
-<button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
+<?php $pageTitle = "Tambah Data"; include 'partials/header.php'; ?>
 
-<script>
-function toggleDarkMode() {
-    document.body.classList.toggle('dark');
-    // Simpan preferensi
-    if (document.body.classList.contains('dark')) {
-        localStorage.setItem('darkMode', 'enabled');
-    } else {
-        localStorage.removeItem('darkMode');
-    }
-}
-
-// Load preferensi saat halaman dibuka
-if (localStorage.getItem('darkMode') === 'enabled') {
-    document.body.classList.add('dark');
-}
-</script>
-<body>
-    <div class="content">
+<div class="content">
     <h2 class="add-form-title">Tambah Data Mahasiswa</h2>
-    <form class="add-form" id="formTambah" onsubmit="handleTambah(event)">
+
+    <?php if (isset($_GET['error'])): ?>
+        <p style="color:#ef4444; font-weight:600;"><?php echo htmlspecialchars($_GET['error']); ?></p>
+    <?php endif; ?>
+
+    <form class="add-form" action="simpan.php" method="POST" enctype="multipart/form-data">
         <table>
             <tr>
                 <td><label for="nama">Nama</label></td>
@@ -67,6 +46,5 @@ if (localStorage.getItem('darkMode') === 'enabled') {
         <input type="submit" value="Tambah Data" class="button">
     </form>
 </div>
-</div>
-</body>
-</html>
+
+<?php include 'partials/footer.php'; ?>
